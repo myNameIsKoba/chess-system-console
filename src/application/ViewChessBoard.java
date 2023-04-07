@@ -1,13 +1,15 @@
 package application;
 
+import application.colors.AnsiColors;
 import chess.ChessPiece;
+import chess.Color;
 
 /**
  * 'UI'
  * @author User
  *▪▫■□
  */
-public class ViewChessBoard {
+public class ViewChessBoard extends AnsiColors{
 
 	public static void printBoard(ChessPiece[][] pieces) {
 		for(Integer x=0; x < pieces.length; x++) {
@@ -26,11 +28,16 @@ public class ViewChessBoard {
 	private static void printPiece(ChessPiece peca, Integer posX, Integer posY) {
 		if (peca == null) {
 			String sqr = (posX % 2 == 0) ? 
-					((posY % 2 == 0) ? " □ " : " ▪ ") : ((posY % 2 == 1) ? " □ " : " ▪ ") ;
+					((posY % 2 == 0) ? " □ " : " ■ ") : ((posY % 2 == 1) ? " □ " : " ■ ") ;
 			System.out.print(sqr);
 		}
 		else {
-			System.out.print(peca);
+			if (peca.getCor() == Color.WHITE) {
+                System.out.print(ANSI_CYAN+ peca + ANSI_RESET);
+            }
+            else {
+                System.out.print(ANSI_YELLOW + peca + ANSI_RESET);
+            }
 		}
 		System.out.print(" ");
 	}
