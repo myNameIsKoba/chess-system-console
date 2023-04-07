@@ -29,4 +29,12 @@ public class Board {
 	}
 	
 	
+	public Piece piece(Integer row, Integer col) {
+		return pecas[row][col];
+	}
+	
+	public Piece piece(Position pos) {
+		return pecas[pos.getRow()][pos.getCol()];
+	}
+	
 }

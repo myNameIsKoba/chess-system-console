@@ -10,8 +10,8 @@ public class Piece {
 	protected Position pos; //inicialmente, pos = null
 	private Board tabua;
 	
-	public Piece(Board tabua) {
-		this.tabua = tabua;
+	public Piece(Board tabuleiro) {
+		this.tabua = tabuleiro;
 	}
 
 	protected Board getTabua() {
