@@ -5,7 +5,7 @@ package boardgame;
  * @author User
  *
  */
-public class Piece {
+public abstract class Piece {
 
 	protected Position pos; //inicialmente, pos = null
 	private Board tabua;
@@ -14,8 +14,34 @@ public class Piece {
 		this.tabua = tabuleiro;
 	}
 
-	protected Board getTabua() {
+	protected Board getTabuleiro() {
 		return tabua;
 	}
 	
+	/**
+	 * Demonstração de um hook method
+	 * @return
+	 */
+	public abstract boolean[][] possibleMoves();
+	
+	public Boolean possibleMove(Position pos) {
+		return possibleMoves()[pos.getRow()][pos.getCol()];
+	}
+	
+	/**
+	 * método que verifica se há algum movimento possivel
+	 * @return
+	 */
+	public Boolean isStuck() {
+		boolean[][] boolMatriz = possibleMoves();
+
+		for(Integer i=0; i <  boolMatriz.length; i++) {
+			for(Integer j=0; j <  boolMatriz.length; j++) {
+				if(boolMatriz[i][j]) {
+					return Boolean.TRUE;
+				}
+			}
+		}
+		return Boolean.FALSE;
+	}
 }

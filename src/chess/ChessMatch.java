@@ -34,7 +34,12 @@ public class ChessMatch {
 		return jogo;
 	}
 	
-	
+	/**
+	 * 
+	 * @param sourcePos
+	 * @param targetPos
+	 * @return
+	 */
 	public ChessPiece performChessMove(ChessPosition sourcePos, ChessPosition targetPos) {
 		Position source = sourcePos.toPos();
 		Position target = targetPos.toPos();
@@ -56,6 +61,9 @@ public class ChessMatch {
 	private void ValidateSourcePos(Position pos) {
 		if (!this.tabuleiro.thereIsAPiece(pos)) {
 			throw new ChessException("Não existe peça na posição de origem");
+		}
+		if (!this.tabuleiro.piece(pos).isStuck()) {
+			throw new ChessException("Não existe movimentos possiveis para a peça escolhida");
 		}
 	}
 

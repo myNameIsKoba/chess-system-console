@@ -15,4 +15,11 @@ public class Rei extends ChessPiece{
 	public String toString() {
 		return " Ω ";
 	}
+
+	@Override
+	public boolean[][] possibleMoves() {
+		
+		boolean[][] matriz = new boolean[getTabuleiro().getLinhas()][getTabuleiro().getColunas()];
+		return matriz;
+	}
 }

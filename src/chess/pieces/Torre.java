@@ -20,4 +20,10 @@ public class Torre extends ChessPiece{
 	public String toString() {
 		return " ∏ ";
 	}
+
+	@Override
+	public boolean[][] possibleMoves() {
+		boolean[][] matriz = new boolean[getTabuleiro().getLinhas()][getTabuleiro().getColunas()];
+		return matriz;
+	}
 }
