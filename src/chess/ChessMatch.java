@@ -1,7 +1,6 @@
 package chess;
 
 import boardgame.Board;
-import boardgame.Position;
 import chess.pieces.Rei;
 import chess.pieces.Torre;
 
@@ -32,15 +31,20 @@ public class ChessMatch {
 		return jogo;
 	}
 	
+	private void placeNewPiece(char col, int row, ChessPiece peca) {
+		this.tabuleiro.placePiece(peca, new ChessPosition(col, row).toPos());
+	}
+	
 	private void initSetup() {
 		/// White place
-		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,0));
-		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,7));
-		this.tabuleiro.placePiece(new Rei(this.tabuleiro, Color.WHITE), new Position(0,3));
+//		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,0)); <- jeito antigo de posicionar
+		placeNewPiece('a', 8, new Torre(this.tabuleiro, Color.WHITE));
+		placeNewPiece('h', 8, new Torre(this.tabuleiro, Color.WHITE));
+		placeNewPiece('d', 8, new Rei(this.tabuleiro, Color.WHITE));
 		
 		/// Black place
-		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.BLACK), new Position(7,0));
-		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.BLACK), new Position(7,7));
-		this.tabuleiro.placePiece(new Rei(this.tabuleiro, Color.BLACK), new Position(7,4));
+		placeNewPiece('a', 1, new Torre(this.tabuleiro, Color.BLACK));
+		placeNewPiece('h', 1, new Torre(this.tabuleiro, Color.BLACK));
+		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.BLACK));
 	}
 }
