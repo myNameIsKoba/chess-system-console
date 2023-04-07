@@ -1,7 +1,8 @@
-package application.colors;
+package application.codes;
 
 public class AnsiCodes {
-
+	//"\033[H\033[2J
+	public static final String ANSI_CLEAR = "\033[H\033[2J";
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_RED = "\u001B[31m";

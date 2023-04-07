@@ -3,7 +3,7 @@ package application;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import application.colors.AnsiCodes;
+import application.codes.AnsiCodes;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import chess.Color;
@@ -15,6 +15,11 @@ import chess.Color;
  */
 public class ViewChessBoard extends AnsiCodes{
 
+	public static void clear() {
+		System.out.println("\n\n\n\n\n\n");
+		System.out.flush();
+	}
+	
 	/**
 	 * 
 	 * @param pieces
@@ -23,14 +28,14 @@ public class ViewChessBoard extends AnsiCodes{
 		System.out.println(" ||   |-------------------------------");
 		for(Integer x=0; x < pieces.length; x++) {
 			
-			System.out.print(" ||" +ANSI_BLACK+"["+(8 - x)+"]"+ANSI_RESET+"|");
+			System.out.print(" ||" +ANSI_GREEN+"["+(8 - x)+"]"+ANSI_RESET+"|");
 			for(Integer y=0; y < pieces.length; y++) {
 				printPiece(pieces[x][y], x, y);
 			}
 			System.out.println("\n" + " || - |");
 		}
 		System.out.println(" ||   |-------------------------------\n" +
-						   " ||[=]|" + ANSI_BLACK + "[A] [B] [C] [D] [E] [F] [G] [H]\n" + ANSI_RESET
+						   " ||[=]|" + ANSI_GREEN + "[A] [B] [C] [D] [E] [F] [G] [H]\n" + ANSI_RESET
 						  +" []===================================");
 	}
 	
