@@ -63,7 +63,7 @@ public class Board {
 			throw new BoardException("Já existe uma peça nesta posição -> " + pos);
 		}
 		this.pecas[pos.getRow()][pos.getCol()] = peca;
-		peca.pos = pos;
+		peca.position = pos;
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class Board {
 			return null;
 		}
 		Piece temp = piece(pos);
-		temp.pos = null;
+		temp.position = null;
 		
 		this.pecas[pos.getRow()][pos.getCol()] = null;
 		return temp;

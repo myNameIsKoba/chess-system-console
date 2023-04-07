@@ -1,7 +1,12 @@
 package chess;
 
+import application.common.Color;
+/**
+ * Classe genérica para determinar peças
+ */
 import boardgame.Board;
 import boardgame.Piece;
+import boardgame.Position;
 
 public abstract class ChessPiece extends Piece{
 
@@ -16,4 +21,13 @@ public abstract class ChessPiece extends Piece{
 		return cor;
 	}
 	
+	/**
+	 * Dieferencia peças aliadas de adversários
+	 * @param pos
+	 * @return
+	 */
+	protected Boolean isThereOpponentPiece(Position pos) {
+		ChessPiece p = (ChessPiece)getTabuleiro().piece(pos);
+		return p != null && p.getCor() != cor;
+	}
 }

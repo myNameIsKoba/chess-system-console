@@ -1,5 +1,6 @@
 package chess;
 
+import application.common.Color;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -35,7 +36,7 @@ public class ChessMatch {
 	}
 	
 	/**
-	 * 
+	 * validação de movimentos
 	 * @param sourcePos
 	 * @param targetPos
 	 * @return
@@ -45,8 +46,9 @@ public class ChessMatch {
 		Position target = targetPos.toPos();
 		
 		ValidateSourcePos(source);
-		Piece capturedPiece = releaseMov(source, target);
+		ValidateTargetPos(source, target);
 		
+		Piece capturedPiece = releaseMov(source, target);
 		return (ChessPiece) capturedPiece;
 	}
 	
@@ -66,7 +68,14 @@ public class ChessMatch {
 			throw new ChessException("Não existe movimentos possiveis para a peça escolhida");
 		}
 	}
+	
+	private void ValidateTargetPos(Position source, Position target) {
+		if (!this.tabuleiro.piece(source).possibleMove(target)) {
+			throw new ChessException("A peça não pode se mover nesta posição");
+		}
+	}
 
+	
 	/**
 	 * 
 	 * @param col

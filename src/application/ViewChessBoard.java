@@ -4,9 +4,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import application.codes.AnsiCodes;
+import application.common.Color;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import chess.Color;
 
 /**
  * 'UI'

@@ -7,7 +7,7 @@ package boardgame;
  */
 public abstract class Piece {
 
-	protected Position pos; //inicialmente, pos = null
+	protected Position position; //inicialmente, pos = null
 	private Board tabua;
 	
 	public Piece(Board tabuleiro) {

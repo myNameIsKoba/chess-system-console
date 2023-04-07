@@ -1,4 +1,4 @@
-package chess;
+package application.common;
 
 public enum Color {
 

@@ -1,8 +1,8 @@
 package chess.pieces;
 
+import application.common.Color;
 import boardgame.Board;
 import chess.ChessPiece;
-import chess.Color;
 
 public class Rei extends ChessPiece{
 
