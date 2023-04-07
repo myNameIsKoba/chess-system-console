@@ -36,6 +36,19 @@ public class ChessMatch {
 	}
 	
 	/**
+	 * imprime todas as posições possiveis de uma peça
+	 * @param sourcePos
+	 * @return
+	 */
+	public boolean[][] possibleMoves(ChessPosition sourcePos){
+		
+		Position pos = sourcePos.toPos();
+		ValidateSourcePos(pos);
+		
+		return this.tabuleiro.piece(pos).possibleMoves();
+	}
+	
+	/**
 	 * validação de movimentos
 	 * @param sourcePos
 	 * @param targetPos
@@ -77,7 +90,7 @@ public class ChessMatch {
 
 	
 	/**
-	 * 
+	 * método que inicia o tabuleiro com as peças
 	 * @param col
 	 * @param row
 	 * @param peca

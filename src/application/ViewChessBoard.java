@@ -30,7 +30,26 @@ public class ViewChessBoard extends AnsiCodes{
 			
 			System.out.print(" ||" +ANSI_GREEN+"["+(8 - x)+"]"+ANSI_RESET+"|");
 			for(Integer y=0; y < pieces.length; y++) {
-				printPiece(pieces[x][y], x, y);
+				printPiece(pieces[x][y], x, y, Boolean.FALSE);
+			}
+			System.out.println("\n" + " || - |");
+		}
+		System.out.println(" ||   |-------------------------------\n" +
+						   " ||[=]|" + ANSI_GREEN + "[A] [B] [C] [D] [E] [F] [G] [H]\n" + ANSI_RESET
+						  +" []===================================");
+	}
+	/**
+	 * 
+	 * @param pieces
+	 * @param possibleMoves
+	 */
+	public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves) {
+		System.out.println(" ||   |-------------------------------");
+		for(Integer x=0; x < pieces.length; x++) {
+			
+			System.out.print(" ||" +ANSI_GREEN+"["+(8 - x)+"]"+ANSI_RESET+"|");
+			for(Integer y=0; y < pieces.length; y++) {
+				printPiece(pieces[x][y], x, y, possibleMoves[x][y]);
 			}
 			System.out.println("\n" + " || - |");
 		}
@@ -45,11 +64,14 @@ public class ViewChessBoard extends AnsiCodes{
 	 * @param posX
 	 * @param posY
 	 */
-	private static void printPiece(ChessPiece peca, Integer posX, Integer posY) {
+	private static void printPiece(ChessPiece peca, Integer posX, Integer posY, Boolean background) {
+		if(background) {
+			System.out.print(ANSI_BLACK_BACKGROUND);
+		}
 		if (peca == null) {
 			String sqr = (posX % 2 == 0) ? 
 					((posY % 2 == 0) ? " □ " : " ■ ") : ((posY % 2 == 1) ? " □ " : " ■ ") ;
-			System.out.print(sqr);
+			System.out.print(sqr + ANSI_RESET);
 		}
 		else {
 			if (peca.getCor() == Color.WHITE) {

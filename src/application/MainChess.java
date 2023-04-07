@@ -23,6 +23,10 @@ public class MainChess {
 				System.out.println("\n Source: ");
 				ChessPosition source = ViewChessBoard.readChessPosition(scaner);
 				
+				boolean[][] possibleMoves = match.possibleMoves(source);
+				ViewChessBoard.clear();
+				ViewChessBoard.printBoard(match.getPecasTabuleiro(), possibleMoves);
+				
 				System.out.println("\n Target: ");
 				ChessPosition target = ViewChessBoard.readChessPosition(scaner);
 				
