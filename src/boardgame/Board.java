@@ -92,4 +92,23 @@ public class Board {
 		}
 		return this.piece(pos) != null;
 	}
+	
+	/**
+	 * 
+	 * @param pos
+	 * @return
+	 */
+	public Piece removePiece(Position pos) {
+		if (!posExists(pos)) {
+			throw new BoardException("Posição inválida !");
+		}
+		if (this.piece(pos) == null) {
+			return null;
+		}
+		Piece temp = piece(pos);
+		temp.pos = null;
+		
+		this.pecas[pos.getRow()][pos.getCol()] = null;
+		return temp;
+	}
 }
