@@ -7,7 +7,7 @@ import chess.ChessPiece;
  * @author User
  *
  */
-public class ViewChess {
+public class ViewChessBoard {
 
 	public static void printBoard(ChessPiece[][] pieces) {
 		for(int x=0; x < pieces.length; x++) {
@@ -16,14 +16,14 @@ public class ViewChess {
 			for(int y=0; y < pieces.length; y++) {
 				printPiece(pieces[x][y]);
 			}
-			System.out.println();
+			System.out.println("\n");
 		}
-		System.out.println("  a b c d e f g h");
+		System.out.println("   a   b   c   d   e   f   g   h");
 	}
 	
 	private static void printPiece(ChessPiece peca) {
 		if (peca == null) {
-			System.out.print(".");
+			System.out.print(" . ");
 		}
 		else {
 			System.out.print(peca);

@@ -1,6 +1,9 @@
 package chess;
 
 import boardgame.Board;
+import boardgame.Position;
+import chess.pieces.Rei;
+import chess.pieces.Torre;
 
 public class ChessMatch {
 
@@ -8,6 +11,7 @@ public class ChessMatch {
 	
 	public ChessMatch() {
 		this.tabuleiro = new Board(8, 8);
+		initSetup();
 	}
 	
 	/**
@@ -26,5 +30,17 @@ public class ChessMatch {
 			}
 		}
 		return jogo;
+	}
+	
+	private void initSetup() {
+		/// White place
+		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,0));
+		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,7));
+		this.tabuleiro.placePiece(new Rei(this.tabuleiro, Color.WHITE), new Position(0,3));
+		
+		/// Black place
+		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.BLACK), new Position(7,0));
+		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.BLACK), new Position(7,7));
+		this.tabuleiro.placePiece(new Rei(this.tabuleiro, Color.BLACK), new Position(7,4));
 	}
 }

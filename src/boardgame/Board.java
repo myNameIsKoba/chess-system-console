@@ -37,4 +37,13 @@ public class Board {
 		return pecas[pos.getRow()][pos.getCol()];
 	}
 	
+	/**
+	 * método onde a posição da matriz de peças atribuí para a peça como argumento 
+	 * @param peca
+	 * @param pos
+	 */
+	public void placePiece(Piece peca, Position pos) {
+		this.pecas[pos.getRow()][pos.getCol()] = peca;
+	}
+	
 }
