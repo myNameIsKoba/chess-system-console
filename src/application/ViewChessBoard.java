@@ -97,8 +97,13 @@ public class ViewChessBoard extends AnsiCodes{
 		printBoard(match.getPecasTabuleiro());
 		printCapturedPieces(captured);
 		
-		System.out.println("\n--Turno : " + match.getTurno());
-		System.out.println("--Aguardando : " + match.getCurrentPlayer());
+		System.out.println("\n--Turno ..........: " + match.getTurno());
+		System.out.println("--Aguardando peça.: " + match.getCurrentPlayer());
+		
+		
+		if (match.getCheck()) {
+			System.out.println(" CHECK ! ");
+		}
 	}
 	
 	/**

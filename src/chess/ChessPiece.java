@@ -21,6 +21,10 @@ public abstract class ChessPiece extends Piece{
 		return cor;
 	}
 	
+	public ChessPosition getChessPos() {
+		return ChessPosition.fromPosition(position);
+	}
+	
 	/**
 	 * Dieferencia peças aliadas de adversários
 	 * @param pos

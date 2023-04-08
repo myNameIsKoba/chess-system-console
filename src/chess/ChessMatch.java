@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import application.common.Color;
 import boardgame.Board;
@@ -16,6 +17,7 @@ public class ChessMatch {
 	private Integer turno;
 	private Color currentPlayer;
 	private Board tabuleiro;
+	private Boolean check;
 	
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPiecesList = new ArrayList<>();
@@ -24,6 +26,8 @@ public class ChessMatch {
 		this.tabuleiro = new Board(8, 8);
 		this.turno = 1;
 		this.currentPlayer = Color.WHITE;
+		this.check = false;
+		
 		initSetup();
 	}
 	
@@ -33,6 +37,10 @@ public class ChessMatch {
 	
 	public Color getCurrentPlayer() {
 		return this.currentPlayer;
+	}
+	
+	public boolean getCheck() {
+		return check;
 	}
 	
 	/**
@@ -79,15 +87,23 @@ public class ChessMatch {
 		ValidateTargetPos(source, target);
 		
 		Piece capturedPiece = releaseMov(source, target);
+		
+		if (isCheck(currentPlayer)) {
+			undoMov(source, target, capturedPiece);
+			throw new ChessException(" voce não pode se colocar em Check ");
+		}
+		
+		this.check = (isCheck(opponent(currentPlayer))) ? true : false ;
+		
 		nextTurn();
 		return (ChessPiece) capturedPiece;
 	}
 	
 	/**
-	 * 
-	 * @param source
-	 * @param target
-	 * @return
+	 * Realiza o movimento 
+	 * @param source -> seleciona uma peça
+	 * @param target -> selecionaum "alvo", pode ser: qualquer lugar disponível ou adversários
+	 * @return -> se houve uma captura adiciona em uma lista ou retorna null em caso de se movimentar no tabuleiro
 	 */
 	private Piece releaseMov(Position source, Position target) {
 		Piece peca = this.tabuleiro.removePiece(source);
@@ -101,6 +117,23 @@ public class ChessMatch {
 		}
 		
 		return capturedPiece;
+	}
+	
+	/**
+	 * Desfaz o movimento. Geralmete usado para detectar movimentos inpróprios
+	 * @param source
+	 * @param target
+	 * @param captured
+	 */
+	private void undoMov(Position source, Position target, Piece captured) {
+		Piece peca = this.tabuleiro.removePiece(target);
+		this.tabuleiro.placePiece(peca, source);
+		
+		if (captured != null) {
+			this.tabuleiro.placePiece(captured, target);
+			this.capturedPiecesList.remove(captured);
+			piecesOnTheBoard.add(captured);
+		}
 	}
 
 	/**
@@ -133,12 +166,51 @@ public class ChessMatch {
 	}
 
 	
-	/**
-	 * 
-	 */
 	private void nextTurn() {
 		this.turno++;
 		this.currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK: Color.WHITE;
+	}
+	
+	private Color opponent(Color color) {
+		return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
+	}
+	
+	private ChessPiece king(Color color) {
+		List<Piece> list = piecesOnTheBoard
+				.stream()
+				.filter(x -> ((ChessPiece) x).getCor() == color).collect(Collectors.toList());
+	
+		for (Piece p : list) {
+			if(p instanceof Rei) {
+				return (ChessPiece) p;
+			}
+		}
+		// NUNCA deve acontecer este erro
+		throw new IllegalStateException("NÃO EXISTE " + color + " \'KING\' NO TABULEIRO");
+	}
+	
+	/**
+	 * Regra de 'check'
+	 * @param color
+	 * @return
+	 */
+	private boolean isCheck(Color color) {
+		Position kingPos = king(color)
+				.getChessPos()
+				.toPos();
+		
+		List<Piece> opponentPieceList = piecesOnTheBoard
+				.stream()
+				.filter(x -> ((ChessPiece) x).getCor() == opponent(color)).collect(Collectors.toList());
+	
+		for (Piece p : opponentPieceList) {
+			boolean[][] matrizOppnt = p.possibleMoves();
+			
+			if( matrizOppnt[kingPos.getRow()][kingPos.getCol()] ) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	
@@ -165,4 +237,5 @@ public class ChessMatch {
 		placeNewPiece('h', 1, new Torre(this.tabuleiro, Color.BLACK));
 		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.BLACK));
 	}
+
 }
