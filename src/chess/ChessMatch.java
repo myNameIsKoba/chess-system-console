@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import application.common.Color;
 import boardgame.Board;
 import boardgame.Piece;
@@ -13,6 +16,9 @@ public class ChessMatch {
 	private Integer turno;
 	private Color currentPlayer;
 	private Board tabuleiro;
+	
+	private List<Piece> piecesOnTheBoard = new ArrayList<>();
+	private List<Piece> capturedPiecesList = new ArrayList<>();
 	
 	public ChessMatch() {
 		this.tabuleiro = new Board(8, 8);
@@ -47,7 +53,7 @@ public class ChessMatch {
 	}
 	
 	/**
-	 * imprime todas as posições possiveis de uma peça
+	 * imprime todas as possiveis posições de uma peça
 	 * @param sourcePos
 	 * @return
 	 */
@@ -60,7 +66,7 @@ public class ChessMatch {
 	}
 	
 	/**
-	 * validação de movimentos
+	 * Validação de movimento das peças
 	 * @param sourcePos
 	 * @param targetPos
 	 * @return
@@ -77,14 +83,30 @@ public class ChessMatch {
 		return (ChessPiece) capturedPiece;
 	}
 	
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 * @return
+	 */
 	private Piece releaseMov(Position source, Position target) {
 		Piece peca = this.tabuleiro.removePiece(source);
-		Piece captPeca = this.tabuleiro.removePiece(target);
+		Piece capturedPiece = this.tabuleiro.removePiece(target);
 		
-		this.tabuleiro.placePiece(peca, target);		
-		return captPeca;
+		this.tabuleiro.placePiece(peca, target);	
+		
+		if (capturedPiece != null) {
+			piecesOnTheBoard.remove(capturedPiece);
+			capturedPiecesList.add(capturedPiece);
+		}
+		
+		return capturedPiece;
 	}
 
+	/**
+	 * 
+	 * @param pos
+	 */
 	private void ValidateSourcePos(Position pos) {
 		if (!this.tabuleiro.thereIsAPiece(pos)) {
 			throw new ChessException("Não existe peça na posição de origem");
@@ -99,6 +121,11 @@ public class ChessMatch {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 */
 	private void ValidateTargetPos(Position source, Position target) {
 		if (!this.tabuleiro.piece(source).possibleMove(target)) {
 			throw new ChessException("A peça não pode se mover nesta posição");
@@ -106,11 +133,14 @@ public class ChessMatch {
 	}
 
 	
-	
+	/**
+	 * 
+	 */
 	private void nextTurn() {
 		this.turno++;
 		this.currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK: Color.WHITE;
 	}
+	
 	
 	/**
 	 * método que inicia o tabuleiro com as peças
@@ -120,6 +150,7 @@ public class ChessMatch {
 	 */
 	private void placeNewPiece(char col, int row, ChessPiece peca) {
 		this.tabuleiro.placePiece(peca, new ChessPosition(col, row).toPos());
+		piecesOnTheBoard.add(peca);
 	}
 	
 	private void initSetup() {

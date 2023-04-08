@@ -1,7 +1,10 @@
 package application;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import application.codes.AnsiCodes;
 import application.common.Color;
@@ -17,7 +20,7 @@ import chess.ChessPosition;
 public class ViewChessBoard extends AnsiCodes{
 
 	public static void clear() {
-		System.out.println("\n\n\n\n\n\n");
+		System.out.println("\033[H\033[2J");
 		System.out.flush();
 	}
 	
@@ -85,10 +88,41 @@ public class ViewChessBoard extends AnsiCodes{
 		System.out.print(" ");
 	}
 	
-	public static void printMatch(ChessMatch match) {
+	/**
+	 * 
+	 * @param match
+	 * @param captured
+	 */
+	public static void printMatch(ChessMatch match, List<ChessPiece> captured) {
 		printBoard(match.getPecasTabuleiro());
-		System.out.println("\n--Turno :" + match.getTurno());
-		System.out.println("--Aguardando :" + match.getCurrentPlayer());
+		printCapturedPieces(captured);
+		
+		System.out.println("\n--Turno : " + match.getTurno());
+		System.out.println("--Aguardando : " + match.getCurrentPlayer());
+	}
+	
+	/**
+	 * 
+	 * @param captured
+	 */
+	private static void printCapturedPieces(List<ChessPiece> captured) {
+		List<ChessPiece> white = captured
+				.stream()
+				.filter(x -> x.getCor() == Color.WHITE)
+				.collect(Collectors.toList());
+		
+		List<ChessPiece> black = captured
+				.stream()
+				.filter(x -> x.getCor() == Color.BLACK)
+				.collect(Collectors.toList());
+		
+		System.out.println("\n -: Peças capturadas :-");
+		System.out.println(" - Brancas.: " 
+					+ ANSI_CYAN 
+					+ Arrays.toString(white.toArray()) + ANSI_RESET);
+		System.out.println(" - Pretas..: " 
+					+ ANSI_YELLOW 
+					+ Arrays.toString(black.toArray()) + ANSI_RESET);
 	}
 	
 	/**

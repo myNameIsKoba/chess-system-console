@@ -2,6 +2,7 @@ package boardgame;
 
 /**
  * atributos #protected - posição simples de matrizes - visivel apenas neste pacote
+ * Classe que generaliza todo tipo de peça
  * @author User
  *
  */
