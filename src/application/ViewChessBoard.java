@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import application.codes.AnsiCodes;
 import application.common.Color;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
@@ -84,8 +85,14 @@ public class ViewChessBoard extends AnsiCodes{
 		System.out.print(" ");
 	}
 	
+	public static void printMatch(ChessMatch match) {
+		printBoard(match.getPecasTabuleiro());
+		System.out.println("\n--Turno :" + match.getTurno());
+		System.out.println("--Aguardando :" + match.getCurrentPlayer());
+	}
+	
 	/**
-	 * 
+	 * método para scanear a entrada dada pelo usuário
 	 * @param scan
 	 * @return
 	 */

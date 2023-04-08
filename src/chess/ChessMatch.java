@@ -10,11 +10,23 @@ import chess.pieces.Torre;
 
 public class ChessMatch {
 
+	private Integer turno;
+	private Color currentPlayer;
 	private Board tabuleiro;
 	
 	public ChessMatch() {
 		this.tabuleiro = new Board(8, 8);
+		this.turno = 1;
+		this.currentPlayer = Color.WHITE;
 		initSetup();
+	}
+	
+	public Integer getTurno() {
+		return turno;
+	}
+	
+	public Color getCurrentPlayer() {
+		return this.currentPlayer;
 	}
 	
 	/**
@@ -61,6 +73,7 @@ public class ChessMatch {
 		ValidateTargetPos(source, target);
 		
 		Piece capturedPiece = releaseMov(source, target);
+		nextTurn();
 		return (ChessPiece) capturedPiece;
 	}
 	
@@ -76,6 +89,11 @@ public class ChessMatch {
 		if (!this.tabuleiro.thereIsAPiece(pos)) {
 			throw new ChessException("Não existe peça na posição de origem");
 		}
+		
+		if (this.currentPlayer != ((ChessPiece)this.tabuleiro.piece(pos)).getCor()) {
+			throw new ChessException("A peça escolhida não é sua");
+		}
+		
 		if (!this.tabuleiro.piece(pos).isStuck()) {
 			throw new ChessException("Não existe movimentos possiveis para a peça escolhida");
 		}
@@ -87,6 +105,12 @@ public class ChessMatch {
 		}
 	}
 
+	
+	
+	private void nextTurn() {
+		this.turno++;
+		this.currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK: Color.WHITE;
+	}
 	
 	/**
 	 * método que inicia o tabuleiro com as peças

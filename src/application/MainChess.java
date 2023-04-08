@@ -19,14 +19,15 @@ public class MainChess {
 		while(true) {
 			try {
 				ViewChessBoard.clear();
-				ViewChessBoard.printBoard(match.getPecasTabuleiro());
-				System.out.println("\n Source: ");
+				ViewChessBoard.printMatch(match);
+				System.out.println("\n Selecione uma peça: ");
 				ChessPosition source = ViewChessBoard.readChessPosition(scaner);
 				
 				boolean[][] possibleMoves = match.possibleMoves(source);
 				ViewChessBoard.clear();
 				ViewChessBoard.printBoard(match.getPecasTabuleiro(), possibleMoves);
 				
+				System.out.println("\n ir para: ");
 				ChessPosition target = ViewChessBoard.readChessPosition(scaner);
 				
 				ChessPiece capturedPiece = match.performChessMove(source, target);

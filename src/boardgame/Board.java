@@ -47,12 +47,10 @@ public class Board {
 	}
 	
 	public Piece piece(Position pos) {
-		System.out.println("piece: "+pos);
 		if (!this.posExists(pos)) {
 			throw new BoardException("Posição inválida !");
 		}
-		
-		System.out.println("pecas[][]: "+pecas[pos.getRow()][pos.getCol()]);
+
 		return pecas[pos.getRow()][pos.getCol()];
 	}
 	
