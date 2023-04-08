@@ -47,9 +47,12 @@ public class Board {
 	}
 	
 	public Piece piece(Position pos) {
+		System.out.println("piece: "+pos);
 		if (!this.posExists(pos)) {
 			throw new BoardException("Posição inválida !");
 		}
+		
+		System.out.println("pecas[][]: "+pecas[pos.getRow()][pos.getCol()]);
 		return pecas[pos.getRow()][pos.getCol()];
 	}
 	
@@ -72,12 +75,12 @@ public class Board {
 	 * @param col
 	 * @return
 	 */
-	private Boolean posExists(Short row, Short col) {
+	private boolean posExists(Short row, Short col) {
 		return row >= 0 && row < this.linhas &&
 				col >= 0 && col < this.colunas;
 	}
 	
-	public Boolean posExists(Position pos) {
+	public boolean posExists(Position pos) {
 		return posExists(pos.getRow().shortValue(), pos.getCol().shortValue());
 	}
 	
@@ -86,7 +89,8 @@ public class Board {
 	 * @param pos
 	 * @return
 	 */
-	public Boolean thereIsAPiece(Position pos) {
+	public boolean thereIsAPiece(Position pos) {
+		
 		if (!this.posExists(pos)) {
 			throw new BoardException("Posição inválida !");
 		}

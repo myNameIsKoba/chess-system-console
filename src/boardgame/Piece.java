@@ -24,7 +24,7 @@ public abstract class Piece {
 	 */
 	public abstract boolean[][] possibleMoves();
 	
-	public Boolean possibleMove(Position pos) {
+	public boolean possibleMove(Position pos) {
 		return possibleMoves()[pos.getRow()][pos.getCol()];
 	}
 	
@@ -32,7 +32,7 @@ public abstract class Piece {
 	 * método que verifica se há algum movimento possivel
 	 * @return
 	 */
-	public Boolean isStuck() {
+	public boolean isStuck() {
 		boolean[][] boolMatriz = possibleMoves();
 
 		for(Integer i=0; i <  boolMatriz.length; i++) {

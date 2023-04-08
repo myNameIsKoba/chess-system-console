@@ -15,7 +15,7 @@ public class Torre extends ChessPiece{
 
 	public Torre(Board tabuleiro, Color cor) {
 		super(tabuleiro, cor);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override

@@ -26,7 +26,6 @@ public class ChessMatch {
 				new ChessPiece[this.tabuleiro.getLinhas()][this.tabuleiro.getColunas()];
 		
 		for(Integer x=0; x < this.tabuleiro.getLinhas(); x++) {
-			
 			for(Integer y=0; y < this.tabuleiro.getColunas(); y++) {
 				
 				jogo[x][y] = (ChessPiece) this.tabuleiro.piece(x, y);
@@ -44,7 +43,7 @@ public class ChessMatch {
 		
 		Position pos = sourcePos.toPos();
 		ValidateSourcePos(pos);
-		
+
 		return this.tabuleiro.piece(pos).possibleMoves();
 	}
 	

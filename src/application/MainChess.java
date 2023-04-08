@@ -27,7 +27,6 @@ public class MainChess {
 				ViewChessBoard.clear();
 				ViewChessBoard.printBoard(match.getPecasTabuleiro(), possibleMoves);
 				
-				System.out.println("\n Target: ");
 				ChessPosition target = ViewChessBoard.readChessPosition(scaner);
 				
 				ChessPiece capturedPiece = match.performChessMove(source, target);
