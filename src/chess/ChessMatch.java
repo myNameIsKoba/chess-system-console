@@ -18,6 +18,7 @@ public class ChessMatch {
 	private Color currentPlayer;
 	private Board tabuleiro;
 	private Boolean check;
+	private Boolean checkMate;
 	
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPiecesList = new ArrayList<>();
@@ -27,6 +28,7 @@ public class ChessMatch {
 		this.turno = 1;
 		this.currentPlayer = Color.WHITE;
 		this.check = false;
+		this.checkMate = false;
 		
 		initSetup();
 	}
@@ -41,6 +43,10 @@ public class ChessMatch {
 	
 	public boolean getCheck() {
 		return check;
+	}
+	
+	public boolean getCheckMate() {
+		return checkMate;
 	}
 	
 	/**
@@ -95,7 +101,13 @@ public class ChessMatch {
 		
 		this.check = (isCheck(opponent(currentPlayer))) ? true : false ;
 		
-		nextTurn();
+		if (isCheckMate(opponent(currentPlayer))) {
+			this.checkMate = true;
+		}
+		else {
+			nextTurn();
+		}
+
 		return (ChessPiece) capturedPiece;
 	}
 	
@@ -175,10 +187,17 @@ public class ChessMatch {
 		return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
 	}
 	
+	/**
+	 * método que valida a defesa do rei quando encontra-se em Check
+	 * @param color
+	 * @return 
+	 */
 	private ChessPiece king(Color color) {
 		List<Piece> list = piecesOnTheBoard
 				.stream()
-				.filter(x -> ((ChessPiece) x).getCor() == color).collect(Collectors.toList());
+				.filter(x -> ((ChessPiece) x)
+						.getCor() == color)
+				.collect(Collectors.toList());
 	
 		for (Piece p : list) {
 			if(p instanceof Rei) {
@@ -190,7 +209,7 @@ public class ChessMatch {
 	}
 	
 	/**
-	 * Regra de 'check'
+	 * Lógica do 'check'
 	 * @param color
 	 * @return
 	 */
@@ -201,7 +220,9 @@ public class ChessMatch {
 		
 		List<Piece> opponentPieceList = piecesOnTheBoard
 				.stream()
-				.filter(x -> ((ChessPiece) x).getCor() == opponent(color)).collect(Collectors.toList());
+				.filter(x -> ((ChessPiece) x)
+						.getCor() == opponent(color))
+				.collect(Collectors.toList());
 	
 		for (Piece p : opponentPieceList) {
 			boolean[][] matrizOppnt = p.possibleMoves();
@@ -211,6 +232,48 @@ public class ChessMatch {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Lógica do checkmate
+	 * @param color
+	 * @return
+	 */
+	private boolean isCheckMate(Color color) {
+		if (!isCheck(color)) {
+			return false;
+		}
+		List<Piece> sameColorPieces = piecesOnTheBoard
+				.stream()
+				.filter(x -> ((ChessPiece) x)
+						.getCor() == color)
+				.collect(Collectors.toList());
+		
+		for (Piece p : sameColorPieces) {
+			
+			boolean[][] mat = p.possibleMoves();
+			for (int i=0; i<this.tabuleiro.getLinhas(); i++) {
+				for (int j=0; j<this.tabuleiro.getColunas(); j++) {
+					//// Condição para NÃO ser check-mate
+					if (mat[i][j]) {
+						Position sourcePos = ((ChessPiece)p)
+								.getChessPos()
+								.toPos();
+						
+						Position targetPos = new Position(i, j); 
+						Piece capturedP = releaseMov(sourcePos, targetPos);
+						
+						boolean testCheck = isCheck(color);
+						undoMov(sourcePos, targetPos, capturedP);
+						
+						if(!testCheck) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 	
 	
@@ -228,14 +291,14 @@ public class ChessMatch {
 	private void initSetup() {
 		/// White place
 //		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,0)); <- jeito antigo de posicionar
-		placeNewPiece('a', 8, new Torre(this.tabuleiro, Color.WHITE));
-		placeNewPiece('h', 8, new Torre(this.tabuleiro, Color.WHITE));
-		placeNewPiece('d', 8, new Rei(this.tabuleiro, Color.WHITE));
+		placeNewPiece('h', 7, new Torre(this.tabuleiro, Color.WHITE));
+		placeNewPiece('d', 1, new Torre(this.tabuleiro, Color.WHITE));
+		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.WHITE));
 		
 		/// Black place
-		placeNewPiece('a', 1, new Torre(this.tabuleiro, Color.BLACK));
-		placeNewPiece('h', 1, new Torre(this.tabuleiro, Color.BLACK));
-		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.BLACK));
+		placeNewPiece('b', 8, new Torre(this.tabuleiro, Color.BLACK));
+		placeNewPiece('a', 8, new Rei(this.tabuleiro, Color.BLACK));
+//		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.BLACK));
 	}
 
 }

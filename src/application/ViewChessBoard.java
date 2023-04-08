@@ -98,11 +98,20 @@ public class ViewChessBoard extends AnsiCodes{
 		printCapturedPieces(captured);
 		
 		System.out.println("\n--Turno ..........: " + match.getTurno());
-		System.out.println("--Aguardando peça.: " + match.getCurrentPlayer());
 		
-		
-		if (match.getCheck()) {
-			System.out.println(" CHECK ! ");
+		if (!match.getCheckMate()) {
+
+			System.out.println("--Aguardando peça.: " + match.getCurrentPlayer());
+			if (match.getCheck()) {
+				System.out.println( ANSI_RED + " [-- CHECK ! --]" + ANSI_RESET);
+			}
+		}	
+		else {
+			System.out.println(
+					ANSI_GREEN +
+					" -- !!CHECKMATE!! --" + ANSI_RESET + "\n" +
+					" -- Vencedor : " + match.getCurrentPlayer()
+					);
 		}
 	}
 	
