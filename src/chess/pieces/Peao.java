@@ -3,12 +3,16 @@ package chess.pieces;
 import application.common.Color;
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 
 public class Peao extends ChessPiece{
 
-	public Peao(Board tabuleiro, Color cor) {
+	private ChessMatch match;
+	
+	public Peao(Board tabuleiro, Color cor, ChessMatch m) {
 		super(tabuleiro, cor);
+		this.match = m;
 	}
 	
 	@Override
@@ -51,6 +55,26 @@ public class Peao extends ChessPiece{
 				matriz[p.getRow()][p.getCol()] = true;
 			}
 			
+			//#specialmove - En passant - Brancas
+			if (position.getRow() == 3) {
+				
+				Position left = new Position(position.getRow(), position.getCol() - 1);
+				if(getTabuleiro().posExists(left) &&
+				    isThereOpponentPiece(left) && 
+				    getTabuleiro().piece(left) == match.GetEnPassantVulnerable()) {
+					
+					matriz[left.getRow() - 1][left.getCol()] = true;
+				}
+				
+				Position right = new Position(position.getRow(), position.getCol() + 1);
+				if(getTabuleiro().posExists(right) &&
+				    isThereOpponentPiece(right) && 
+				    getTabuleiro().piece(right) == match.GetEnPassantVulnerable()) {
+					
+					matriz[right.getRow() - 1][right.getCol()] = true;
+				}
+			}
+			
 		}
 		else {
 			p.setValues( position.getRow() + 1, position.getCol() );
@@ -78,6 +102,26 @@ public class Peao extends ChessPiece{
 			p.setValues( position.getRow() + 1, position.getCol() - 1);
 			if (getTabuleiro().posExists(p) && isThereOpponentPiece(p)) {
 				matriz[p.getRow()][p.getCol()] = true;
+			}
+			
+			//#specialmove -  En passant - Pretas
+			if (position.getRow() == 4) {
+				
+				Position left = new Position(position.getRow(), position.getCol() - 1);
+				if(getTabuleiro().posExists(left) &&
+				    isThereOpponentPiece(left) && 
+				    getTabuleiro().piece(left) == match.GetEnPassantVulnerable()) {
+					
+					matriz[left.getRow() + 1][left.getCol()] = true;
+				}
+				
+				Position right = new Position(position.getRow(), position.getCol() + 1);
+				if(getTabuleiro().posExists(right) &&
+				    isThereOpponentPiece(right) && 
+				    getTabuleiro().piece(right) == match.GetEnPassantVulnerable()) {
+					
+					matriz[right.getRow() + 1][right.getCol()] = true;
+				}
 			}
 		}
 		

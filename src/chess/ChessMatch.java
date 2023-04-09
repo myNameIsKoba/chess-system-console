@@ -23,6 +23,7 @@ public class ChessMatch {
 	private Board tabuleiro;
 	private Boolean check;
 	private Boolean checkMate;
+	private ChessPiece enPassantVulnerable;
 	
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPiecesList = new ArrayList<>();
@@ -51,6 +52,10 @@ public class ChessMatch {
 	
 	public boolean getCheckMate() {
 		return checkMate;
+	}
+	
+	public ChessPiece GetEnPassantVulnerable() {
+		return enPassantVulnerable;
 	}
 	
 	/**
@@ -103,6 +108,9 @@ public class ChessMatch {
 			throw new ChessException(" voce não pode se colocar em Check ");
 		}
 		
+		/// En passant
+		ChessPiece movedPiece = (ChessPiece)tabuleiro.piece(target);
+				
 		this.check = (isCheck(opponent(currentPlayer))) ? true : false ;
 		
 		if (isCheckMate(opponent(currentPlayer))) {
@@ -110,6 +118,17 @@ public class ChessMatch {
 		}
 		else {
 			nextTurn();
+		}
+		
+		/// En passant
+		if (movedPiece instanceof Peao && 
+			target.getRow() == source.getRow() - 2|| 
+			target.getRow() == source.getRow() + 2 ) {
+			
+			this.enPassantVulnerable = movedPiece;
+		}
+		else {
+			this.enPassantVulnerable = null;
 		}
 
 		return (ChessPiece) capturedPiece;
@@ -133,24 +152,102 @@ public class ChessMatch {
 			capturedPiecesList.add(capturedPiece);
 		}
 		
+		///#specialmove - Roque kingside
+		if (peca instanceof Rei && target.getCol() == source.getCol() + 2) {
+			Position sourceTorre = new Position(source.getRow(), source.getCol() + 3);
+			Position targetTorre = new Position(source.getRow(), source.getCol() + 1);
+			
+			ChessPiece rook = (ChessPiece)tabuleiro.removePiece(sourceTorre);
+			tabuleiro.placePiece(rook, targetTorre);
+			rook.increaseCount();
+		}
+		
+		///#specialmove -  Roque queenside
+		if (peca instanceof Rei && target.getCol() == source.getCol() - 2) {
+			Position sourceTorre = new Position(source.getRow(), source.getCol() - 4);
+			Position targetTorre = new Position(source.getRow(), source.getCol() - 1);
+
+			ChessPiece rook = (ChessPiece) tabuleiro.removePiece(sourceTorre);
+			tabuleiro.placePiece(rook, targetTorre);
+			rook.increaseCount();
+		}
+		
+		///#specialmove -  En Passant
+		if (peca instanceof Peao) {
+			
+			if (source.getCol() != target.getCol() && 
+				capturedPiece == null) {
+				Position peaoPos;
+				
+				if (peca.getCor() == Color.WHITE) {
+					peaoPos = new Position(target.getRow() + 1, target.getCol());
+				}
+				else {
+					peaoPos = new Position(target.getRow() - 1, target.getCol());
+				}
+				
+				capturedPiece = tabuleiro.removePiece(peaoPos);
+				capturedPiecesList.add(capturedPiece);
+				piecesOnTheBoard.remove(capturedPiece);
+			}
+		}
+		
 		return capturedPiece;
 	}
 	
 	/**
-	 * Desfaz o movimento. Geralmete usado para detectar movimentos inpróprios
+	 * Desfaz o movimento exatamente o contrario do método acima. Geralmete usado para detectar 
+	 * movimentos impróprios
 	 * @param source
 	 * @param target
-	 * @param captured
+	 * @param capturedPiece
 	 */
-	private void undoMov(Position source, Position target, Piece captured) {
+	private void undoMov(Position source, Position target, Piece capturedPiece) {
 		ChessPiece peca = (ChessPiece)this.tabuleiro.removePiece(target);
 		peca.decreaseCount();
 		
 		this.tabuleiro.placePiece(peca, source);
-		if (captured != null) {
-			this.tabuleiro.placePiece(captured, target);
-			this.capturedPiecesList.remove(captured);
-			piecesOnTheBoard.add(captured);
+		if (capturedPiece != null) {
+			this.tabuleiro.placePiece(capturedPiece, target);
+			this.capturedPiecesList.remove(capturedPiece);
+			piecesOnTheBoard.add(capturedPiece);
+		}
+		
+		///#specialmove -  Roque kingside
+		if (peca instanceof Rei && target.getCol() == source.getCol() + 2) {
+			Position sourceTorre = new Position(source.getRow(), source.getCol() + 3);
+			Position targetTorre = new Position(source.getRow(), source.getCol() + 1);
+
+			ChessPiece rook = (ChessPiece) tabuleiro.removePiece(targetTorre);
+			tabuleiro.placePiece(rook, sourceTorre);
+			rook.decreaseCount();
+		}
+
+		///#specialmove -  Roque queenside
+		if (peca instanceof Rei && target.getCol() == source.getCol() - 2) {
+			Position sourceTorre = new Position(source.getRow(), source.getCol() - 4);
+			Position targetTorre = new Position(source.getRow(), source.getCol() - 1);
+
+			ChessPiece rook = (ChessPiece) tabuleiro.removePiece(targetTorre);
+			tabuleiro.placePiece(rook, sourceTorre);
+			rook.decreaseCount();
+		}
+		
+		///#specialmove -  En Passant
+		if (peca instanceof Peao) {
+
+			if (source.getCol() != target.getCol() && capturedPiece == null) {
+				ChessPiece peao = (ChessPiece)tabuleiro.removePiece(target);
+				Position peaoPos;
+
+				if (peca.getCor() == Color.WHITE) {
+					peaoPos = new Position(3, target.getCol());
+				} else {
+					peaoPos = new Position(4, target.getCol());
+				}
+
+				this.tabuleiro.placePiece(peao, peaoPos);
+			}
 		}
 	}
 
@@ -316,38 +413,38 @@ public class ChessMatch {
 		placeNewPiece('b', 1, new Cavalo(this.tabuleiro, Color.WHITE));
 		placeNewPiece('c', 1, new Bispo(this.tabuleiro, Color.WHITE));
 		placeNewPiece('d', 1, new Rainha(this.tabuleiro, Color.WHITE));
-		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.WHITE));
+		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.WHITE, this));
 		placeNewPiece('f', 1, new Bispo(this.tabuleiro, Color.WHITE));
 		placeNewPiece('g', 1, new Cavalo(this.tabuleiro, Color.WHITE));
 		placeNewPiece('h', 1, new Torre(this.tabuleiro, Color.WHITE));
 		
-		placeNewPiece('a', 2, new Peao(this.tabuleiro, Color.WHITE));
-		placeNewPiece('b', 2, new Peao(this.tabuleiro, Color.WHITE));
-		placeNewPiece('c', 2, new Peao(this.tabuleiro, Color.WHITE));
-		placeNewPiece('d', 2, new Peao(this.tabuleiro, Color.WHITE));
-		placeNewPiece('e', 2, new Peao(this.tabuleiro, Color.WHITE));
-		placeNewPiece('f', 2, new Peao(this.tabuleiro, Color.WHITE));
-		placeNewPiece('g', 2, new Peao(this.tabuleiro, Color.WHITE));
-		placeNewPiece('h', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('a', 2, new Peao(this.tabuleiro, Color.WHITE, this));
+		placeNewPiece('b', 2, new Peao(this.tabuleiro, Color.WHITE, this));
+		placeNewPiece('c', 2, new Peao(this.tabuleiro, Color.WHITE, this));
+		placeNewPiece('d', 2, new Peao(this.tabuleiro, Color.WHITE, this));
+		placeNewPiece('e', 2, new Peao(this.tabuleiro, Color.WHITE, this));
+		placeNewPiece('f', 2, new Peao(this.tabuleiro, Color.WHITE, this));
+		placeNewPiece('g', 2, new Peao(this.tabuleiro, Color.WHITE, this));
+		placeNewPiece('h', 2, new Peao(this.tabuleiro, Color.WHITE, this));
 		
 		/// Black place
 		placeNewPiece('a', 8, new Torre(this.tabuleiro, Color.BLACK));
 		placeNewPiece('b', 8, new Cavalo(this.tabuleiro, Color.BLACK));
 		placeNewPiece('c', 8, new Bispo(this.tabuleiro, Color.BLACK));
 		placeNewPiece('d', 8, new Rainha(this.tabuleiro, Color.BLACK));
-		placeNewPiece('e', 8, new Rei(this.tabuleiro, Color.BLACK));
+		placeNewPiece('e', 8, new Rei(this.tabuleiro, Color.BLACK, this));
 		placeNewPiece('f', 8, new Bispo(this.tabuleiro, Color.BLACK));
 		placeNewPiece('g', 8, new Cavalo(this.tabuleiro, Color.BLACK));
 		placeNewPiece('h', 8, new Torre(this.tabuleiro, Color.BLACK));
 		
-		placeNewPiece('a', 7, new Peao(this.tabuleiro, Color.BLACK));
-		placeNewPiece('b', 7, new Peao(this.tabuleiro, Color.BLACK));
-		placeNewPiece('c', 7, new Peao(this.tabuleiro, Color.BLACK));
-		placeNewPiece('d', 7, new Peao(this.tabuleiro, Color.BLACK));
-		placeNewPiece('e', 7, new Peao(this.tabuleiro, Color.BLACK));
-		placeNewPiece('f', 7, new Peao(this.tabuleiro, Color.BLACK));
-		placeNewPiece('g', 7, new Peao(this.tabuleiro, Color.BLACK));
-		placeNewPiece('h', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('a', 7, new Peao(this.tabuleiro, Color.BLACK, this));
+		placeNewPiece('b', 7, new Peao(this.tabuleiro, Color.BLACK, this));
+		placeNewPiece('c', 7, new Peao(this.tabuleiro, Color.BLACK, this));
+		placeNewPiece('d', 7, new Peao(this.tabuleiro, Color.BLACK, this));
+		placeNewPiece('e', 7, new Peao(this.tabuleiro, Color.BLACK, this));
+		placeNewPiece('f', 7, new Peao(this.tabuleiro, Color.BLACK, this));
+		placeNewPiece('g', 7, new Peao(this.tabuleiro, Color.BLACK, this));
+		placeNewPiece('h', 7, new Peao(this.tabuleiro, Color.BLACK, this));
 	}
 
 }
