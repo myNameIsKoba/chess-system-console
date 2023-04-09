@@ -9,6 +9,7 @@ import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
 import chess.exception.ChessException;
+import chess.pieces.Bispo;
 import chess.pieces.Peao;
 import chess.pieces.Rei;
 import chess.pieces.Torre;
@@ -310,8 +311,10 @@ public class ChessMatch {
 //		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,0)); <- jeito antigo de posicionar
 		/// White place
 		placeNewPiece('a', 1, new Torre(this.tabuleiro, Color.WHITE));
-		placeNewPiece('h', 1, new Torre(this.tabuleiro, Color.WHITE));
+		placeNewPiece('c', 1, new Bispo(this.tabuleiro, Color.WHITE));
 		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.WHITE));
+		placeNewPiece('f', 1, new Bispo(this.tabuleiro, Color.WHITE));
+		placeNewPiece('h', 1, new Torre(this.tabuleiro, Color.WHITE));
 		
 		placeNewPiece('a', 2, new Peao(this.tabuleiro, Color.WHITE));
 		placeNewPiece('b', 2, new Peao(this.tabuleiro, Color.WHITE));
@@ -324,8 +327,10 @@ public class ChessMatch {
 		
 		/// Black place
 		placeNewPiece('a', 8, new Torre(this.tabuleiro, Color.BLACK));
-		placeNewPiece('h', 8, new Torre(this.tabuleiro, Color.BLACK));
+		placeNewPiece('c', 8, new Bispo(this.tabuleiro, Color.BLACK));
 		placeNewPiece('e', 8, new Rei(this.tabuleiro, Color.BLACK));
+		placeNewPiece('f', 8, new Bispo(this.tabuleiro, Color.BLACK));
+		placeNewPiece('h', 8, new Torre(this.tabuleiro, Color.BLACK));
 		
 		placeNewPiece('a', 7, new Peao(this.tabuleiro, Color.BLACK));
 		placeNewPiece('b', 7, new Peao(this.tabuleiro, Color.BLACK));

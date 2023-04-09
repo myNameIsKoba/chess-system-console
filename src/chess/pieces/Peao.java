@@ -62,6 +62,7 @@ public class Peao extends ChessPiece{
 			Position pos2 = new Position( position.getRow() + 1, position.getCol() );
 			if (getTabuleiro().posExists(p) 			&& 
 					!getTabuleiro().thereIsAPiece(p)    &&
+					
 					getTabuleiro().posExists(pos2)      &&
 					!getTabuleiro().thereIsAPiece(pos2) &&
 					getMoveCount() == 0) {
