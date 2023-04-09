@@ -20,23 +20,28 @@ public class MainChess {
 		
 		while(!match.getCheckMate()) {
 			try {
+				
 				ViewChessBoard.clear();
 				ViewChessBoard.printMatch(match, captured);
 				
-				System.out.println("\n Selecione uma peça: ");
+				System.out.print("\n Selecione uma peça: ");
 				ChessPosition source = ViewChessBoard.readChessPosition(scaner);
 				
 				boolean[][] possibleMoves = match.possibleMoves(source);
 				ViewChessBoard.clear();
 				ViewChessBoard.printBoard(match.getPecasTabuleiro(), possibleMoves);
 				
-				System.out.println("\n ir para: ");
+				System.out.print("\n ir para: ");
 				ChessPosition target = ViewChessBoard.readChessPosition(scaner);
 				
 				ChessPiece capturedPiece = match.performChessMove(source, target);
 				
 				if (capturedPiece != null) {
 					captured.add(capturedPiece);
+				}
+				
+				if (match.getPromoted() != null) {
+					ViewChessBoard.newPromotedScreen(scaner, match);
 				}
 				
 			}
@@ -52,4 +57,5 @@ public class MainChess {
 		ViewChessBoard.clear();
 		ViewChessBoard.printMatch(match, captured);
 	}
+	
 }

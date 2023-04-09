@@ -10,7 +10,7 @@ public abstract class Piece {
 
 	protected Position position; //inicialmente, pos = null
 	private Board tabua;
-	
+
 	public Piece(Board tabuleiro) {
 		this.tabua = tabuleiro;
 	}

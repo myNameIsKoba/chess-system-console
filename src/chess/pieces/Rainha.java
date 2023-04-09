@@ -13,7 +13,8 @@ public class Rainha extends ChessPiece{
 
 	@Override //Ѯ
 	public String toString() {
-		return " ζ ";
+//		return " ζ ";
+		return " Q ";
 	}
 	
 	@Override

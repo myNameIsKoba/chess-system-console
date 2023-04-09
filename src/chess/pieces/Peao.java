@@ -17,7 +17,8 @@ public class Peao extends ChessPiece{
 	
 	@Override
 	public String toString() {
-		return " Δ ";
+//		return " Δ ";
+		return " p ";
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class Peao extends ChessPiece{
 				Position left = new Position(position.getRow(), position.getCol() - 1);
 				if(getTabuleiro().posExists(left) &&
 				    isThereOpponentPiece(left) && 
-				    getTabuleiro().piece(left) == match.GetEnPassantVulnerable()) {
+				    getTabuleiro().piece(left) == match.getEnPassantVulnerable()) {
 					
 					matriz[left.getRow() - 1][left.getCol()] = true;
 				}
@@ -69,7 +70,7 @@ public class Peao extends ChessPiece{
 				Position right = new Position(position.getRow(), position.getCol() + 1);
 				if(getTabuleiro().posExists(right) &&
 				    isThereOpponentPiece(right) && 
-				    getTabuleiro().piece(right) == match.GetEnPassantVulnerable()) {
+				    getTabuleiro().piece(right) == match.getEnPassantVulnerable()) {
 					
 					matriz[right.getRow() - 1][right.getCol()] = true;
 				}
@@ -110,7 +111,7 @@ public class Peao extends ChessPiece{
 				Position left = new Position(position.getRow(), position.getCol() - 1);
 				if(getTabuleiro().posExists(left) &&
 				    isThereOpponentPiece(left) && 
-				    getTabuleiro().piece(left) == match.GetEnPassantVulnerable()) {
+				    getTabuleiro().piece(left) == match.getEnPassantVulnerable()) {
 					
 					matriz[left.getRow() + 1][left.getCol()] = true;
 				}
@@ -118,7 +119,7 @@ public class Peao extends ChessPiece{
 				Position right = new Position(position.getRow(), position.getCol() + 1);
 				if(getTabuleiro().posExists(right) &&
 				    isThereOpponentPiece(right) && 
-				    getTabuleiro().piece(right) == match.GetEnPassantVulnerable()) {
+				    getTabuleiro().piece(right) == match.getEnPassantVulnerable()) {
 					
 					matriz[right.getRow() + 1][right.getCol()] = true;
 				}

@@ -14,7 +14,8 @@ public class Bispo extends ChessPiece{
 
 	@Override
 	public String toString() {
-		return " ф ";
+//		return " ф ";
+		return " B ";
 	}
 	
 	@Override

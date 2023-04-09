@@ -14,7 +14,8 @@ public class Cavalo extends ChessPiece{
 
 	@Override
 	public String toString() {
-		return " Ѓ ";
+//		return " Ѓ ";
+		return " L "; // ou N
 	}
 	
 	private boolean canMove(Position pos) {

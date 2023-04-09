@@ -12,12 +12,14 @@ public abstract class ChessPiece extends Piece{
 
 	private Color cor;
 	private Integer moveCount;
+	
 
 	public ChessPiece(Board tabuleiro, Color cor) {
 		super(tabuleiro);
 		this.cor = cor;
 		this.moveCount = 0;
 	}
+	
 
 	public Color getCor() {
 		return cor;

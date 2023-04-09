@@ -29,7 +29,7 @@ public class ViewChessBoard extends AnsiCodes{
 	 * @param pieces
 	 */
 	public static void printBoard(ChessPiece[][] pieces) {
-		System.out.println(" ||   |-------------------------------");
+		System.out.println(" ||||||-------------------------------");
 		for(Integer x=0; x < pieces.length; x++) {
 			
 			System.out.print(" ||" +ANSI_GREEN+"["+(8 - x)+"]"+ANSI_RESET+"|");
@@ -70,11 +70,13 @@ public class ViewChessBoard extends AnsiCodes{
 	 */
 	private static void printPiece(ChessPiece peca, Integer posX, Integer posY, Boolean background) {
 		if(background) {
-			System.out.print(ANSI_BLACK_BACKGROUND);
+			System.out.print(ANSI_GREEN_BACKGROUND);
 		}
 		if (peca == null) {
+//			String sqr = (posX % 2 == 0) ? 
+//					((posY % 2 == 0) ? " □ " : " ■ ") : ((posY % 2 == 1) ? " □ " : " ■ ") ;
 			String sqr = (posX % 2 == 0) ? 
-					((posY % 2 == 0) ? " □ " : " ■ ") : ((posY % 2 == 1) ? " □ " : " ■ ") ;
+					((posY % 2 == 0) ? " # " : " _ ") : ((posY % 2 == 1) ? " # " : " _ ") ;
 			System.out.print(sqr + ANSI_RESET);
 		}
 		else {
@@ -103,16 +105,44 @@ public class ViewChessBoard extends AnsiCodes{
 
 			System.out.println("--Aguardando peça.: " + match.getCurrentPlayer());
 			if (match.getCheck()) {
-				System.out.println( ANSI_RED + " [-- CHECK ! --]" + ANSI_RESET);
+				System.out.println( ANSI_RED_BACKGROUND + " [-- CHECK ! --]" + ANSI_RESET);
 			}
 		}	
 		else {
 			System.out.println(
-					ANSI_GREEN +
+					ANSI_GREEN_BACKGROUND +
 					" -- !!CHECKMATE!! --" + ANSI_RESET + "\n" +
 					" -- Vencedor : " + match.getCurrentPlayer()
 					);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param scan
+	 * @param m
+	 */
+	public static void newPromotedScreen(Scanner scan, ChessMatch m) {
+		System.out.println(" ========================= \n"
+						 + " -- Escolha a promoção: -- \n"
+						 + "  - [1] - Torre \n"
+						 + "  - [2] - Bispo \n"
+						 + "  - [3] - Cavalo \n"
+						 + "  - [4] - Rainha \n"
+						 + " -------------------------");
+		System.out.print("  >> "); 
+		String type = scan.nextLine();
+		
+		while ( !type.equals("1") &&
+				!type.equals("2") &&
+				!type.equals("3") &&
+				!type.equals("4")) {
+			
+			System.out.println(ANSI_RED_BACKGROUND + 
+							" -- Peça inválida -- " + ANSI_RESET);
+			type = scan.nextLine();
+		}
+		m.replacePromotedPiece(type);
 	}
 	
 	/**
@@ -130,11 +160,11 @@ public class ViewChessBoard extends AnsiCodes{
 				.filter(x -> x.getCor() == Color.BLACK)
 				.collect(Collectors.toList());
 		
-		System.out.println("\n -: Peças capturadas :-");
-		System.out.println(" - Brancas.: " 
+		System.out.println("\n || -: Peças capturadas :-");
+		System.out.println(" || - Brancas.: " 
 					+ ANSI_CYAN 
 					+ Arrays.toString(white.toArray()) + ANSI_RESET);
-		System.out.println(" - Pretas..: " 
+		System.out.println(" || - Pretas..: " 
 					+ ANSI_YELLOW 
 					+ Arrays.toString(black.toArray()) + ANSI_RESET);
 	}
@@ -157,4 +187,6 @@ public class ViewChessBoard extends AnsiCodes{
 		}
 		
 	}
+	
+	
 }

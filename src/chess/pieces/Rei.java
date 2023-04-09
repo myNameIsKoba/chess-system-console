@@ -17,7 +17,8 @@ public class Rei extends ChessPiece{
 
 	@Override
 	public String toString() {
-		return " Щ ";
+//		return " Щ ";
+		return " K ";
 	}
 	
 	/**

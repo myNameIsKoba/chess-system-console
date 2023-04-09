@@ -16,7 +16,7 @@ import chess.pieces.Rainha;
 import chess.pieces.Rei;
 import chess.pieces.Torre;
 
-public class ChessMatch {
+public class ChessMatch{
 
 	private Integer turno;
 	private Color currentPlayer;
@@ -24,6 +24,7 @@ public class ChessMatch {
 	private Boolean check;
 	private Boolean checkMate;
 	private ChessPiece enPassantVulnerable;
+	private ChessPiece promoted;
 	
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPiecesList = new ArrayList<>();
@@ -54,8 +55,12 @@ public class ChessMatch {
 		return checkMate;
 	}
 	
-	public ChessPiece GetEnPassantVulnerable() {
+	public ChessPiece getEnPassantVulnerable() {
 		return enPassantVulnerable;
+	}
+	
+	public ChessPiece getPromoted() {
+		return promoted;
 	}
 	
 	/**
@@ -105,12 +110,25 @@ public class ChessMatch {
 		
 		if (isCheck(currentPlayer)) {
 			undoMov(source, target, capturedPiece);
-			throw new ChessException(" voce não pode se colocar em Check ");
+			throw new ChessException( " [ --" +
+					" voce não pode se colocar em Check -- ]");
 		}
 		
 		/// En passant
 		ChessPiece movedPiece = (ChessPiece)tabuleiro.piece(target);
+		
+		/// Promoção
+		this.promoted = null;
+		if (movedPiece instanceof Peao) {
+			
+			if((movedPiece.getCor() == Color.WHITE && target.getRow() == 0) ||
+			   (movedPiece.getCor() == Color.BLACK && target.getRow() == 7) ){
 				
+				this.promoted = (ChessPiece)tabuleiro.piece(target);
+				this.promoted = replacePromotedPiece("1");
+			}
+		}
+		
 		this.check = (isCheck(opponent(currentPlayer))) ? true : false ;
 		
 		if (isCheckMate(opponent(currentPlayer))) {
@@ -132,6 +150,51 @@ public class ChessMatch {
 		}
 
 		return (ChessPiece) capturedPiece;
+	}
+	
+	
+	/**
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public ChessPiece replacePromotedPiece(String type) {
+		
+		if (this.promoted == null) {
+			throw new IllegalStateException( " [ --" +
+					" NÃO há peça para ser promovida -- ]");
+		}
+		
+		if (!type.equals("1") &&
+			!type.equals("2") &&
+			!type.equals("3") &&
+			!type.equals("4")) {
+			
+			return promoted;
+		}
+		
+		Position pos = promoted.getChessPos().toPos();
+		Piece p = tabuleiro.removePiece(pos);
+		piecesOnTheBoard.remove(p);
+		
+		ChessPiece novaPeca = newPiece(type, promoted.getCor());
+		tabuleiro.placePiece(novaPeca, pos);
+		piecesOnTheBoard.add(novaPeca);
+
+		return novaPeca;
+	}
+	
+	/**
+	 * 
+	 * @param t
+	 * @param c
+	 * @return
+	 */
+	private ChessPiece newPiece(String t, Color c) {
+		if (t.equals("2")) return new Bispo(this.tabuleiro, c);
+		if (t.equals("3")) return new Cavalo(this.tabuleiro, c);
+		if (t.equals("4")) return new Rainha(this.tabuleiro, c);
+		return new Torre(this.tabuleiro, c);
 	}
 	
 	/**
@@ -257,15 +320,18 @@ public class ChessMatch {
 	 */
 	private void ValidateSourcePos(Position pos) {
 		if (!this.tabuleiro.thereIsAPiece(pos)) {
-			throw new ChessException("Não existe peça na posição de origem");
+			throw new ChessException( " [ --" +
+					"Não existe peça na posição de origem -- ]");
 		}
 		
 		if (this.currentPlayer != ((ChessPiece)this.tabuleiro.piece(pos)).getCor()) {
-			throw new ChessException("A peça escolhida não é sua");
+			throw new ChessException( " [ --" +
+					"A peça escolhida não é sua -- ]");
 		}
 		
 		if (!this.tabuleiro.piece(pos).isStuck()) {
-			throw new ChessException("Não existe movimentos possiveis para a peça escolhida");
+			throw new ChessException( " [ --" +
+					"Não existe movimentos possiveis para a peça escolhida -- ]");
 		}
 	}
 	
@@ -276,7 +342,8 @@ public class ChessMatch {
 	 */
 	private void ValidateTargetPos(Position source, Position target) {
 		if (!this.tabuleiro.piece(source).possibleMove(target)) {
-			throw new ChessException("A peça não pode se mover nesta posição");
+			throw new ChessException( " [ --" +
+					"A peça não pode se mover nesta posição --]");
 		}
 	}
 
@@ -308,7 +375,8 @@ public class ChessMatch {
 			}
 		}
 		// NUNCA deve acontecer este erro
-		throw new IllegalStateException("NÃO EXISTE " + color + " \'KING\' NO TABULEIRO");
+		throw new IllegalStateException( " ###" +
+				"NÃO EXISTE " + color + " \'KING\' NO TABULEIRO ###");
 	}
 	
 	/**
@@ -395,6 +463,7 @@ public class ChessMatch {
 	
 	
 	/**
+	 * #pieces
 	 * método que inicia o tabuleiro com as peças
 	 * @param col
 	 * @param row

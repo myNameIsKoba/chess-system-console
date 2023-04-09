@@ -19,7 +19,8 @@ public class Torre extends ChessPiece{
 
 	@Override
 	public String toString() {
-		return " ∏ ";
+//		return " ∏ ";
+		return " T "; // ou R
 	}
 	
 	@Override
