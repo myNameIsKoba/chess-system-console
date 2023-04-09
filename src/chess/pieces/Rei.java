@@ -14,7 +14,7 @@ public class Rei extends ChessPiece{
 
 	@Override
 	public String toString() {
-		return " Ω ";
+		return " Щ ";
 	}
 	
 	private boolean canMove(Position pos) {

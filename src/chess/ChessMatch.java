@@ -9,6 +9,7 @@ import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
 import chess.exception.ChessException;
+import chess.pieces.Peao;
 import chess.pieces.Rei;
 import chess.pieces.Torre;
 
@@ -118,9 +119,10 @@ public class ChessMatch {
 	 * @return -> se houve uma captura adiciona em uma lista ou retorna null em caso de se movimentar no tabuleiro
 	 */
 	private Piece releaseMov(Position source, Position target) {
-		Piece peca = this.tabuleiro.removePiece(source);
-		Piece capturedPiece = this.tabuleiro.removePiece(target);
+		ChessPiece peca = (ChessPiece)this.tabuleiro.removePiece(source);
+		peca.increaseCount();
 		
+		Piece capturedPiece = this.tabuleiro.removePiece(target);
 		this.tabuleiro.placePiece(peca, target);	
 		
 		if (capturedPiece != null) {
@@ -138,9 +140,10 @@ public class ChessMatch {
 	 * @param captured
 	 */
 	private void undoMov(Position source, Position target, Piece captured) {
-		Piece peca = this.tabuleiro.removePiece(target);
-		this.tabuleiro.placePiece(peca, source);
+		ChessPiece peca = (ChessPiece)this.tabuleiro.removePiece(target);
+		peca.decreaseCount();
 		
+		this.tabuleiro.placePiece(peca, source);
 		if (captured != null) {
 			this.tabuleiro.placePiece(captured, target);
 			this.capturedPiecesList.remove(captured);
@@ -209,9 +212,14 @@ public class ChessMatch {
 	}
 	
 	/**
-	 * Lógica do 'check'
-	 * @param color
-	 * @return
+	 * Lógica do 'Check'. 
+	 * 	<br> Seleciona a posiçao do rei e junta todas as peças do adversário em uma lista e então itera 
+	 * em uma matriz de booleanos com movimentos possíveis. 
+	 * 	<br> Se houver algum oponente que ameaçe tomar sua posição e que seja possível evitar 
+	 * tomando a peça inimiga ou escapando em alguma outra casa consta como um Check. 
+	 *  <br> Retorna true se satisfazer a condição acima e false se não houver ameaça
+	 * @param color 
+	 * @return 
 	 */
 	private boolean isCheck(Color color) {
 		Position kingPos = king(color)
@@ -235,7 +243,16 @@ public class ChessMatch {
 	}
 	
 	/**
-	 * Lógica do checkmate
+	 * Lógica do 'Check-Mate'
+	 * <br> Primeiro verificamos se NÃO está em check.
+	 * <br> E então selecionamos todas as peças aliadas em uma lista. <br>
+	 * <br> Segunda etapa: verificar todos os casos que não são check-mate
+	 * <p> 
+	 * 	Para isso, iteramos em uma matriz de booleanos com todos os movimentos possiveis. 
+	 * 	Selecionamos o destino da peça com o iterador e depois realizamos o movimento e 
+	 *  então testamos se o 'parâmetro color' está em Cheque armazenando em uma váriavel.  
+	 * </p>
+	 * 
 	 * @param color
 	 * @return
 	 */
@@ -266,7 +283,7 @@ public class ChessMatch {
 						boolean testCheck = isCheck(color);
 						undoMov(sourcePos, targetPos, capturedP);
 						
-						if(!testCheck) {
+						if (!testCheck) {
 							return false;
 						}
 					}
@@ -289,16 +306,35 @@ public class ChessMatch {
 	}
 	
 	private void initSetup() {
-		/// White place
+		
 //		this.tabuleiro.placePiece(new Torre(this.tabuleiro, Color.WHITE), new Position(0,0)); <- jeito antigo de posicionar
-		placeNewPiece('h', 7, new Torre(this.tabuleiro, Color.WHITE));
-		placeNewPiece('d', 1, new Torre(this.tabuleiro, Color.WHITE));
+		/// White place
+		placeNewPiece('a', 1, new Torre(this.tabuleiro, Color.WHITE));
+		placeNewPiece('h', 1, new Torre(this.tabuleiro, Color.WHITE));
 		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.WHITE));
 		
+		placeNewPiece('a', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('b', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('c', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('d', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('e', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('f', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('g', 2, new Peao(this.tabuleiro, Color.WHITE));
+		placeNewPiece('h', 2, new Peao(this.tabuleiro, Color.WHITE));
+		
 		/// Black place
-		placeNewPiece('b', 8, new Torre(this.tabuleiro, Color.BLACK));
-		placeNewPiece('a', 8, new Rei(this.tabuleiro, Color.BLACK));
-//		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.BLACK));
+		placeNewPiece('a', 8, new Torre(this.tabuleiro, Color.BLACK));
+		placeNewPiece('h', 8, new Torre(this.tabuleiro, Color.BLACK));
+		placeNewPiece('e', 8, new Rei(this.tabuleiro, Color.BLACK));
+		
+		placeNewPiece('a', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('b', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('c', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('d', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('e', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('f', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('g', 7, new Peao(this.tabuleiro, Color.BLACK));
+		placeNewPiece('h', 7, new Peao(this.tabuleiro, Color.BLACK));
 	}
 
 }
