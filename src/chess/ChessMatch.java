@@ -12,6 +12,7 @@ import chess.exception.ChessException;
 import chess.pieces.Bispo;
 import chess.pieces.Cavalo;
 import chess.pieces.Peao;
+import chess.pieces.Rainha;
 import chess.pieces.Rei;
 import chess.pieces.Torre;
 
@@ -314,6 +315,7 @@ public class ChessMatch {
 		placeNewPiece('a', 1, new Torre(this.tabuleiro, Color.WHITE));
 		placeNewPiece('b', 1, new Cavalo(this.tabuleiro, Color.WHITE));
 		placeNewPiece('c', 1, new Bispo(this.tabuleiro, Color.WHITE));
+		placeNewPiece('d', 1, new Rainha(this.tabuleiro, Color.WHITE));
 		placeNewPiece('e', 1, new Rei(this.tabuleiro, Color.WHITE));
 		placeNewPiece('f', 1, new Bispo(this.tabuleiro, Color.WHITE));
 		placeNewPiece('g', 1, new Cavalo(this.tabuleiro, Color.WHITE));
@@ -332,6 +334,7 @@ public class ChessMatch {
 		placeNewPiece('a', 8, new Torre(this.tabuleiro, Color.BLACK));
 		placeNewPiece('b', 8, new Cavalo(this.tabuleiro, Color.BLACK));
 		placeNewPiece('c', 8, new Bispo(this.tabuleiro, Color.BLACK));
+		placeNewPiece('d', 8, new Rainha(this.tabuleiro, Color.BLACK));
 		placeNewPiece('e', 8, new Rei(this.tabuleiro, Color.BLACK));
 		placeNewPiece('f', 8, new Bispo(this.tabuleiro, Color.BLACK));
 		placeNewPiece('g', 8, new Cavalo(this.tabuleiro, Color.BLACK));
